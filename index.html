@@ -112,7 +112,7 @@
     }
 
     updateCounters();
-
+    // Now we are going to toggle the completed state of the todos
     function toggleDone() {
       var checkbox = this;
 
@@ -120,7 +120,54 @@
 
       updateCounters();
     }
+    // To trigger this function, we are going to take the check boxes and listen for their onChange events
     $("input[type=checkbox]").bind('change', toggleDone);
-  </script>
+    // To create new todos, we need to add a listener on the form for the submit event
+    $("form").bind('submit', submitTodo);
+
+    //Inside the submitTodo function, we call a createTodo function that takes a title argument:
+    function submitTodo(event) {
+      // stop the form from doing the default action, submitting...
+      event.preventDefault();
+
+      var title = $("#new-todo").val()
+
+      createTodo(title);
+
+      $("#new-todo").val(null)
+      updateCounters();
+
+        function createTodo(title) {
+          var checkboxId = "todo-" + nextTodoId();
+
+          var listItem = $("<li></li>");
+          listItem.addClass("todo");
+
+          var checkbox = $('<input>');
+          checkbox.attr('type', 'checkbox');
+          checkbox.attr('id', checkboxId);
+          checkbox.val(1);
+          checkbox.bind('change', toggleDone);
+
+          var space = document.createTextNode(" ");
+
+          var label = $('<label></label>');
+          label.attr('for', checkboxId);
+          label.html(title);
+
+          listItem.append(checkbox);
+          listItem.append(space);
+          listItem.append(label);
+
+          $("#todolist").append( listItem );
+
+          updateCounters();
+        }
+
+        function nextTodoId() {
+          return $(".todo").length + 1;
+        }
+    }
+      </script>
 </body>
 </html>
